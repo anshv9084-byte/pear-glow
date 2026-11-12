@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { STOCK_LEFT } from "@/lib/pear-catalog";
 import {
   formatCountdown,
   useDispatchTrigger,
@@ -26,7 +25,7 @@ export default function UrgencyBar() {
             </span>
             <span className="hidden items-center gap-1.5 rounded-full bg-[#F8F4EC]/10 px-2 py-0.5 text-[9px] font-semibold text-[#F0E8C9] sm:inline-flex">
               <span className="h-1.5 w-1.5 rounded-full bg-[#E8B36A]" />
-              Only {STOCK_LEFT} left
+              Ships in 1&ndash;2 days
             </span>
             <Link
               href="/#buy"

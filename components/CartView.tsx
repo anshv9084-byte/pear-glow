@@ -268,7 +268,7 @@ export default function CartView() {
                 CHECKOUT SECURELY →
               </a>
               <p className="text-center text-[#8B94B8] text-[11px] mt-2.5">
-                Secure checkout · UPI, cards & COD
+                Secure checkout · UPI QR & COD
               </p>
 
               <div className="mt-5 pt-5 border-t border-[#1A2244]">

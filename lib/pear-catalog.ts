@@ -2,7 +2,6 @@ export const PRODUCT_NAME = "Color-Changing Silicone Night Lamp";
 
 export const RATING = 4.6;
 export const REVIEW_COUNT = "1,240";
-export const STOCK_LEFT = 14;
 
 export type BundleId = "single" | "duo";
 

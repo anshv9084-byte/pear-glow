@@ -11,7 +11,6 @@ import {
   PRODUCT_NAME,
   RATING,
   REVIEW_COUNT,
-  STOCK_LEFT,
   VARIANTS,
   fmtPrice,
   type BundleId,
@@ -382,8 +381,8 @@ export default function ProductHero() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#B55A3C]" />
             </span>
             <span>
-              <strong className="font-bold">Only {STOCK_LEFT} units left</strong>{" "}
-              in our India warehouse
+              <strong className="font-bold">In stock</strong> — ships from our
+              India warehouse in 1&ndash;2 days
             </span>
             <span className="ml-auto hidden text-[9.5px] font-normal text-[#8A7A2E] sm:inline">
               Reserve yours before the timer ends

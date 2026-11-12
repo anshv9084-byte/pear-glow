@@ -68,6 +68,23 @@ export default function CartPage() {
     ].join("\n");
 
     window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+
+    void fetch("/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: list.map((item) => ({
+          key: item.key,
+          name: item.name,
+          detail: item.detail,
+          qty: item.qty,
+          price: item.price,
+        })),
+        customer: { name, phone, address, pincode },
+        payment: paymentMethod,
+      }),
+      keepalive: true,
+    }).catch(() => {});
   }
 
   return (
@@ -75,7 +92,7 @@ export default function CartPage() {
       <Header />
       <CartDrawer />
 
-      <main className="mx-auto max-w-[1120px] px-5 pb-20 pt-8 lg:px-8 lg:pt-12">
+      <main className="mx-auto max-w-[1120px] px-5 pb-32 pt-8 lg:px-8 lg:pb-20 lg:pt-12">
         <nav className="flex items-center gap-2 text-[12px] text-[#8A8779]">
           <Link href="/" className="transition-colors hover:text-[#23271C]">
             Home
@@ -234,7 +251,7 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <form onSubmit={handleCheckout} className="space-y-2.5">
+              <form id="order-form" onSubmit={handleCheckout} className="space-y-2.5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8A7A2E]">
                   Delivery details
                 </p>
@@ -268,11 +285,16 @@ export default function CartPage() {
                   />
                   <PaymentOption
                     label="Cash on Delivery"
-                    hint="Pay when it arrives"
+                    hint="No prepayment · pay at your door"
                     selected={paymentMethod === "cod"}
                     onSelect={() => setPaymentMethod("cod")}
                   />
                 </div>
+                <p className="flex items-start gap-1.5 rounded-lg bg-[#EDF0E4]/70 px-2.5 py-2 text-[10px] leading-snug text-[#5C7145]">
+                  <CheckIcon className="mt-[1px] h-3 w-3 shrink-0" />
+                  Cash on Delivery available across India — pay only when your
+                  lamp arrives.
+                </p>
                 {paymentMethod === "upi" && (
                   <div className="rounded-xl border border-[#2B3022]/12 bg-white/55 p-3.5 text-center">
                     <p className="text-[10.5px] font-medium text-[#777567]">
@@ -300,10 +322,15 @@ export default function CartPage() {
                     </p>
                     <a
                       href={upiLink(total)}
-                      className="mt-2 inline-flex items-center justify-center rounded-full border border-[#8A7A2E]/40 px-4 py-2 text-[11px] font-semibold text-[#6B5F24] transition-colors hover:bg-[#F3EEE2]"
+                      className="mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#4F5D3D] px-4 py-2.5 text-[11.5px] font-semibold text-[#F8F4EC] transition-colors hover:bg-[#455234]"
                     >
-                      Open UPI app
+                      <CheckIcon className="h-3.5 w-3.5" />
+                      Pay {fmtPrice(total)} in your UPI app
                     </a>
+                    <p className="mt-1.5 text-[9.5px] leading-relaxed text-[#9A9789]">
+                      On your phone? Tap above to open Paytm, GPay or any UPI
+                      app directly.
+                    </p>
                   </div>
                 )}
                 <button
@@ -315,17 +342,74 @@ export default function CartPage() {
                 </button>
               </form>
 
-              <p className="mt-3 text-center text-[10.5px] leading-relaxed text-[#8A8779]">
-                We&rsquo;ll confirm your order on WhatsApp. Pay via the UPI QR
-                code or choose Cash on Delivery.
-              </p>
+              <div className="mt-3 rounded-xl border border-[#2B3022]/10 bg-[#F5EFE2]/70 px-3.5 py-3">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[#8A7A2E]">
+                  What happens next
+                </p>
+                <ol className="mt-1.5 space-y-1 text-[10.5px] leading-snug text-[#6E6D62]">
+                  <li className="flex gap-2">
+                    <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#8A7A2E]/15 text-[8.5px] font-bold text-[#6B5F24]">
+                      1
+                    </span>
+                    WhatsApp opens with your order details filled in.
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#8A7A2E]/15 text-[8.5px] font-bold text-[#6B5F24]">
+                      2
+                    </span>
+                    We confirm your address and dispatch in 1&ndash;2 days.
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[#8A7A2E]/15 text-[8.5px] font-bold text-[#6B5F24]">
+                      3
+                    </span>
+                    Pay now via UPI QR, or choose Cash on Delivery.
+                  </li>
+                </ol>
+              </div>
 
-              <div className="mt-4 flex items-center justify-center gap-1.5 border-t border-[#2B3022]/10 pt-4 text-[10.5px] font-medium text-[#777567]">
-                <CheckIcon className="h-3.5 w-3.5 text-[#5C7145]" />
-                Secure checkout &amp; free shipping
+              <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#2B3022]/10 pt-4">
+                {["Secure checkout", "Free shipping", "7-day replacement"].map(
+                  (label) => (
+                    <div
+                      key={label}
+                      className="flex flex-col items-center gap-1 text-center"
+                    >
+                      <CheckIcon className="h-3.5 w-3.5 text-[#5C7145]" />
+                      <span className="text-[9.5px] font-medium leading-tight text-[#777567]">
+                        {label}
+                      </span>
+                    </div>
+                  )
+                )}
               </div>
               <PaymentMarks ids={FOOTER_PAYMENTS} className="mt-3 justify-center" />
             </aside>
+          </div>
+        )}
+        {list.length > 0 && (
+          <div
+            className="fixed inset-x-0 bottom-0 z-50 border-t border-[#2B3022]/10 bg-[#FBF8F1]/95 px-4 pt-3 backdrop-blur-md lg:hidden"
+            style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}
+          >
+            <div className="mx-auto flex max-w-[1120px] items-center gap-3">
+              <div className="shrink-0">
+                <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-[#8A8779]">
+                  Total
+                </p>
+                <p className="text-[17px] font-semibold leading-tight text-[#23271C]">
+                  {fmtPrice(total)}
+                </p>
+              </div>
+              <button
+                type="submit"
+                form="order-form"
+                className="ml-auto flex h-[46px] flex-1 items-center justify-center gap-2 rounded-full bg-[#4F5D3D] text-[12.5px] font-semibold text-[#F8F4EC] active:bg-[#455234]"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                Checkout via WhatsApp
+              </button>
+            </div>
           </div>
         )}
       </main>

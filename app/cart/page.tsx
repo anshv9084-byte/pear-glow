@@ -12,7 +12,9 @@ export default function CartPage() {
   return (
     <>
       <CartPageView />
-      <CtaFooter />
+      <div className="bg-[#4B593B] pb-[84px] lg:pb-0">
+        <CtaFooter />
+      </div>
     </>
   );
 }

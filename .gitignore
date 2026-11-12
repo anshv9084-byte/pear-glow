@@ -2,6 +2,13 @@ node_modules/
 .next/
 out/
 .netlify/
-.env*.local
+.env*
+opencode-context.txt
+*.pid
+dev.log
+dev.err.log
+shot*.png
+shot.mjs
+web pics/
 *.tsbuildinfo
 .DS_Store
