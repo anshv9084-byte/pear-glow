@@ -58,6 +58,9 @@ export const metadata: Metadata = {
       "A squishy, color-changing bedtime friend that glows softly without any shattered glass risk.",
     images: ["/assets/pear/og.jpg"],
   },
+  other: {
+    "facebook-domain-verification": "om7bwo3hyklo0kbl2wyqiyo9t1uv4u",
+  },
 };
 
 export const viewport = {
